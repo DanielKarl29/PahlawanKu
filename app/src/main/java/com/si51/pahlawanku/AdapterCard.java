@@ -1,5 +1,7 @@
 package com.si51.pahlawanku;
 
+import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +18,11 @@ import java.util.ArrayList;
 
 public class AdapterCard extends  RecyclerView.Adapter<AdapterCard.ClassViewHolder>{
     private ArrayList<ModelPahlawan> dataPahlawan;
+    private Context ctx;
 
-    public AdapterCard(ArrayList<ModelPahlawan> dataPahlawan) {
+    public AdapterCard(ArrayList<ModelPahlawan> dataPahlawan, Context ctx) {
         this.dataPahlawan = dataPahlawan;
+        this.ctx = ctx;
     }
 
     @NonNull
@@ -35,10 +39,26 @@ public class AdapterCard extends  RecyclerView.Adapter<AdapterCard.ClassViewHold
         holder.tvNama.setText(pahlawan.getNama());
         holder.tvTentang.setText(pahlawan.getTentang());
         Glide
-                .with(holder.itemView.getContext())
+                .with(ctx)
                 .load(pahlawan.getFoto())
                 .centerCrop()
                 .into(holder.ivFoto);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String xNama, xTentang, xFoto;
+
+                xNama = pahlawan.getNama();
+                xFoto = pahlawan.getFoto();
+                xTentang = pahlawan.getTentang();
+
+                Intent kirim = new Intent(ctx, DetailActivity.class);
+                kirim.putExtra("xNama", xNama);
+                kirim.putExtra("xTentang", xTentang);
+                kirim.putExtra("xFoto", xFoto);
+                 ctx.startActivity(kirim);
+            }
+        });
 
     }
 
